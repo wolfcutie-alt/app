@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
-from . import crud, models, database
+import crud, models, database
 
 app = FastAPI()
 
