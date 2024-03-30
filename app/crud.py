@@ -1,27 +1,33 @@
 from sqlalchemy.orm import Session
-from .models import User
 
-def get_user(db: Session, user_id: int):
-    return db.query(User).filter(User.id == user_id).first()
-
-def create_user(db: Session, username: str, email: str):
-    db_user = User(username=username, email=email)
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-def update_user(db: Session, user_id: int, username: str, email: str):
-    user = get_user(db, user_id)
-    if user:
-        user.username = username
-        user.email = email
+class UserCRUD:
+    @staticmethod
+    def create_user(db: Session, username: str, email: str):
+        db.execute(
+            "INSERT INTO users (username, email) VALUES (:username, :email)",
+            {"username": username, "email": email}
+        )
         db.commit()
-        return user
 
-def delete_user(db: Session, user_id: int):
-    user = get_user(db, user_id)
-    if user:
-        db.delete(user)
+    @staticmethod
+    def get_user(db: Session, user_id: int):
+        return db.execute(
+            "SELECT * FROM users WHERE id = :user_id",
+            {"user_id": user_id}
+        ).fetchone()
+
+    @staticmethod
+    def update_user(db: Session, user_id: int, username: str, email: str):
+        db.execute(
+            "UPDATE users SET username = :username, email = :email WHERE id = :user_id",
+            {"username": username, "email": email, "user_id": user_id}
+        )
         db.commit()
-        return {"message": "User deleted successfully"}
+
+    @staticmethod
+    def delete_user(db: Session, user_id: int):
+        db.execute(
+            "DELETE FROM users WHERE id = :user_id",
+            {"user_id": user_id}
+        )
+        db.commit()
