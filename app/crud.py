@@ -1,4 +1,8 @@
 from sqlalchemy.orm import Session
+<<<<<<< HEAD
+=======
+from models import User
+>>>>>>> b9abe0142f4ce09b1438de10ba116ec7638e27fa
 
 class UserCRUD:
     @staticmethod
